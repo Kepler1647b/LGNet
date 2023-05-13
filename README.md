@@ -24,9 +24,9 @@ Other dependencies: Openslide (3.4.1), matplotlib (3.1.1), numpy (1.18.1), openc
 ```
 apt-get install openslide-python
 ```
-- Create a conda environment with environment.yaml:
+- Create a conda environment with lgnet.yaml:
 ```
-conda env create -f environment.yaml
+conda env create -f lgnet.yaml
 ```  
 - Activate the environment:
 ```
