@@ -1,6 +1,6 @@
 # LGNet
 
-the source code of article 'Deep learning-based intraoperative differentiation of primary CNS lymphoma and glioma: a discovery, multicenter validation, and proof-of concept study'.
+The source code of article 'Deep learning-based intraoperative differentiation of primary CNS lymphoma and glioma: a discovery, multicenter validation, and proof-of concept study'.
 
 ## System requirements
 This code was developed and tested in the following settings. 
@@ -35,30 +35,35 @@ conda activate env1
 - Typical installation time: 1 hour
 
 ## Preprocessing
-we use the python files to convert the WSI to patches with size 515*512 pixels and taking color normalization for comparison.
+We use the python files to convert the WSI to patches with size 515*512 pixels and taking color normalization for comparison.
 
 
-- generate_correct2.py
-- StainTools-master/main_staintools.py
-- Vahadane/main.py
+- /preprocessing/generate_patch.py
+Generate patches from slides
+- /preprocessing/StainTools-master/main_staintools.py
+Color normalization through staintools
+- /preprocessing/Vahadane/main.py
+Vahadane color normalization
 
 ## Training and evaluation of LGNet
-files for training and evaluation are in /classification.
 
-for instance:
-
+### Training
 ```
-python /classification/train.py --TrainFolder '' --NumEpoch 100 --Model resnet50 --Loss 'cross' --LearningRate '0.005' --BatchSize 128 --WeightDecay '0.0005' --Seed 0 --DeviceId '0,1' --FoldN 1
+python train.py --TrainFolder './trainfolder' --NumEpoch 100 --Model resnet50 --Loss 'cross' --LearningRate '0.005' --BatchSize 128 --WeightDecay '0.0005' --Seed 0 --DeviceId '0,1' --FoldN 1
 
 ```
 
-the checkpoints are saved in /ckpt, 5 files derived from 5 fold cross validation.
+The trained checkpoints are saved in /ckpt, 5 files derived from 5 fold cross validation.
 
+### Evaluation
+Variate files for evaluation of single fold, ensemble 5 folds for multicenter datasets and proof-of-concept dataset are available. Here is an instance for ensembled multicenter dataset evaluation.
+```
+python test_multicenter_ensemble.py --ModelPath '/Model' --DataPath './multicenter1' --ResultPath './result' --DeviceId '0,1' --Model resnet50
+```
 ## Fusion Strategy
 LGNet prediction results and pathologist confidence data used in the article are shown in /fusion_data.
-notebook is used to design fusion strategy.
+Notebook is used to design fusion strategy. 2 files are for proof-of concept dataset and multicenter datasets, respectively.
 
 - fusion_foresight.ipynb
 - fusion_roc_figure.ipynb
 
-for proof-of concept dataset and multicenter datasets, respectively.
