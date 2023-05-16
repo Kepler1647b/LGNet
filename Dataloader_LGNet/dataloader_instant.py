@@ -1,15 +1,10 @@
 import torch.utils.data as data_utils
 import torch
-from PIL import Image 
-import cv2
-#import jpeg4py as jpeg
+from PIL import Image
 import numpy as np
 import random
 import glob
 import os
-import math
-import logging
-
 def seed_torch(seed = 0):
     random.seed(seed)
     os.environ["PYTHONHASHSEED"] = str(seed)
@@ -22,14 +17,9 @@ seed_torch(seed = 0)
 
 dic = {'glioma': 0,
        'lymphoma': 1}
-dic2 = {'normal': 0,
-'tumor': 1}
-
 
 class ZSData(data_utils.Dataset):
     def __init__(self, slidepath, type, transforms=None, bi = None):
-        #self.datapath = imgs_dir
-        #self.maskpath = masks_dir
         self.mask = []
         self.img = []
         self.label = []
@@ -41,7 +31,7 @@ class ZSData(data_utils.Dataset):
             if type in dic.keys():
                 self.label.append(dic[type])
             else:
-                self.label.append(dic2[type])
+                self.label.append(0)
 
 
     def __len__(self):

@@ -18,8 +18,6 @@
 # along with this library; if not, write to the Free Software Foundation,
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-#将slide图像转为tile，显示label中图像信息
-
 """An example program to generate a Deep Zoom directory tree from a slide."""
 from __future__ import print_function
 import json
@@ -61,12 +59,10 @@ def OTSU_enhance(img_gray, th_begin=0, th_end=256, th_step=1):
         u0 = float(np.sum(img_gray * bin_img)) / fore_pix
         w1 = float(back_pix) / img_gray.size
         u1 = float(np.sum(img_gray * bin_img_inv)) / back_pix
-        # intra-class variance
         g = w0 * w1 * (u0 - u1) * (u0 - u1)
         if g > max_g:
             max_g = g
             suitable_th = threshold
-    #print(suitable_th)
     suitable_th = suitable_th * 1.05
     if suitable_th < 210:
         suitable_th = 210
@@ -105,8 +101,6 @@ class TileWorker(Process):
             tile = dz.get_tile(level, address) 
             tile.save(outfile, quality=self._quality)
             self._queue.task_done()
-            #except Exception as e: 
-                #print('Image %s failed at dz.get_tile for level %f' %(self._slidepath, level))
                 
 
     def _get_dz(self, associated=None):
@@ -136,7 +130,6 @@ class DeepZoomImageTiler(object):
 
     def run(self):
         self._write_tiles()
-        #self._write_dzi()
 
     def _write_tiles(self):
         Magnification = self._Mag
@@ -191,25 +184,18 @@ class DeepZoomImageTiler(object):
                 size1=int(w*(downsamples[0]/downsamples[1]))
                 size2=int(h*(downsamples[0]/downsamples[1]))
                 upsample = downsamples[1] / downsamples[0]
-            #slide_downsamples = source.get_best_level_for_downsample(16.2)  
-            #print(slide_downsamples)
                 region=np.array(self._slide.read_region((0,0),1,(size1,size2)))
                 print(region.shape)
-                #print(region)
             else:
                 size1=int(w*(downsamples[0]/downsamples[2]))
                 size2=int(h*(downsamples[0]/downsamples[2]))
                 upsample = downsamples[2] / downsamples[0]
-            #slide_downsamples = source.get_best_level_for_downsample(16.2)  
-            #print(slide_downsamples)
                 region=np.array(self._slide.read_region((0,0),2,(size1,size2)))
                 print(region.shape)
-                #print(region)
             print(np.sum(region))
             thumbnail = Image.fromarray(region)
             gray = thumbnail.convert('L')
             gray1 = np.array(gray)
-            #print(gray)
             otsu = OTSU_enhance(gray1)
             print(otsu)
             gray = gray.point(lambda x: 1 if x < otsu and x > 100 else 0, 'F')
@@ -249,7 +235,7 @@ class DeepZoomImageTiler(object):
 
     def _tile_done(self):
         self._processed += 1
-        count, total = self._processed, self._dz.tile_count #切片计数
+        count, total = self._processed, self._dz.tile_count 
         print("Tiling %s: wrote %d/%d tiles" % (self._associated or 'slide', count, total), end='\r', file=sys.stderr)
         if count == total:
             print(file=sys.stderr)
@@ -284,11 +270,6 @@ class DeepZoomStaticTiler(object):
 
     def run(self):
         self._run_image()
-        '''if self._with_viewer: 
-            for name in self._slide.associated_images:
-                self._run_image(name)
-            self._write_html()
-            self._write_static()'''
         self._shutdown()
 
     def _run_image(self, associated=None):
@@ -309,7 +290,6 @@ class DeepZoomStaticTiler(object):
 
         tiler = DeepZoomImageTiler(dz, outpath, basenameJPG, self._format, self._queue, self._slide, self._ImgExtension, self._Mag, self._tile_size, associated=None)
         tiler.run()
-        #self._dzi_data[self._url_for(associated)] = tiler.get_dzi()
 
     def _url_for(self, associated):
         if associated is None:
@@ -331,9 +311,6 @@ class DeepZoomStaticTiler(object):
             mpp = (float(mpp_x) + float(mpp_y)) / 2
         except (KeyError, ValueError):
             mpp = 0
-        # Embed the dzi metadata in the HTML to work around Chrome's
-        # refusal to allow XmlHttpRequest from file:///, even when
-        # the originating page is also a file:///
         data = template.render(slide_url=self._url_for(None),
                     slide_mpp=mpp,
                     associated=associated_urls,
@@ -410,9 +387,7 @@ if __name__ == '__main__':
         slidepath = args[0]
     except IndexError:
         parser.error('Missing slide argument')
-    #if opts.basename is None:
-        #opts.basename = os.path.splitext(os.path.basename(slidepath))[0]
-    for classes in ['easy', 'hard']:
+    for classes in ['glioma', 'lymphoma']:
             
         slides = glob.glob(os.path.join(slidepath, classes, '*.svs'))
 

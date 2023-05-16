@@ -1,14 +1,10 @@
 import torch.utils.data as data_utils
 import torch
-from PIL import Image 
-import cv2
-#import jpeg4py as jpeg
+from PIL import Image
 import numpy as np
 import random
 import glob
 import os
-import math
-import logging
 
 def seed_torch(seed = 0):
     random.seed(seed)
@@ -27,17 +23,11 @@ class ZSData(data_utils.Dataset):
     def __init__(self, imgs_dir, imgs_dir2, transforms=None, bi = None):
         self.datapath = imgs_dir
         self.datapath2 = imgs_dir2
-        #self.maskpath = masks_dir
         self.mask = []
         self.img = []
         self.label = []
         for datapath in [imgs_dir, imgs_dir2]:
-
-        #logging.info(f'Creating dataset with {len(self.ids)} examples')
             for type in ['lymphoma', 'glioma']:
-                #if not os.path.exists(os.path.join(self.maskpath, type)):
-                    #print('No exist type of data in mask dataset:', type)
-                    #continue
                 if not os.path.exists(os.path.join(datapath, type)):
                     print('No exist type of data in image dataset:', type)
                     continue
@@ -51,7 +41,6 @@ class ZSData(data_utils.Dataset):
                         patchs = glob.glob(os.path.join(datapath, type, case, slide, '*'))
                         random.shuffle(patchs)
                         for patch in patchs:        
-                            patchname = os.path.basename(patch)
                             slidepatchs.append(patch)
                             slidelabels.append(dic[type])
                             slidepatchs.append(patch)
