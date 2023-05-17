@@ -65,7 +65,7 @@ The trained checkpoints are saved in /ckpt, 5 files derived from 5-fold cross va
 ### Evaluation
 Variate files for evaluation of single fold, ensemble 5 folds for multicenter datasets and proof-of concept dataset are available. Here is an instance for ensembled multicenter dataset evaluation.
 ```
-python test_multicenter_ensemble.py --ModelPath '/Model' --DataPath './multicenter1' --ResultPath './result' --DeviceId '0,1' --Model resnet50
+python test_multicenter_ensemble.py --ModelPath './Model' --DataPath './multicenter1' --ResultPath './result' --DeviceId '0,1' --Model resnet50
 ```
 ## Fusion Strategy
 LGNet prediction results and pathologist confidence data used in the article are shown in /fusion_data.
