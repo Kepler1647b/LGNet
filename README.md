@@ -63,7 +63,7 @@ python train.py --TrainFolder './trainfolder' --NumEpoch 100 --Model resnet50 --
 The trained checkpoints are saved in /ckpt, 5 files derived from 5-fold cross validation.
 
 ### Evaluation
-Various files for evaluation of single fold, ensemble 5 folds for multicenter datasets and proof-of concept dataset are available. Here is an instance for ensembled multicenter dataset evaluation.
+Various files for evaluation of single fold, ensemble 5 folds for multicenter datasets and proof-of concept dataset are available. Here is an instance for ensemble multicenter dataset evaluation.
 ```
 python test_multicenter_ensemble.py --ModelPath './Model' --DataPath './multicenter1' --ResultPath './result' --DeviceId '0,1' --Model resnet50
 ```
